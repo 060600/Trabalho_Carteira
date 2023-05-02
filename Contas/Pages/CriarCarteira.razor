@@ -1,0 +1,61 @@
+﻿@page "/cadastro"
+@inject DadosCarteiras  dados
+
+<PageTitle>Cadastrar Carteira</PageTitle>
+
+<h5>Nome:</h5>
+<input type="text" @bind=nome/><br/>
+
+<h5>Entre com seu CPF:</h5>
+<input type="text" @bind=CPF /><br>
+
+<h5>Valor Deposito Inicial:</h5>
+<input type="text" @bind=valor/>
+
+<br><br>
+<button class="btn btn-primary" @onclick="CriarConta">
+    Criar Conta</button>
+
+    <br><br>
+    <h1>@mensagem</h1>
+
+
+@code {
+    public string CPF;
+    public int numConta = 1;
+    private string nome;
+    private double valor;
+    public double limiteConta;
+    private string mensagem = "";
+
+    
+    private void CriarConta()
+    {/* 
+        //Criar conta apenas no horário comercial (Depósito)
+
+        var horaAtual = DateTime.Now.TimeOfDay;
+        var horaInicio = TimeSpan.FromHours(8);
+        var horaFim = TimeSpan.FromHours(18);
+
+        if (horaAtual < horaInicio || horaAtual > horaFim)
+        {
+            mensagem = "Os depósitos só podem ser realizados no horário comercial, das 8h às 18h.";
+            return;
+        } 
+        
+      */
+
+        Carteira novaConta = new Carteira();
+        novaConta.Dono = nome;
+        novaConta.CPF = CPF;
+        novaConta.Depositar(valor);
+        novaConta.numConta = numConta++;
+        novaConta.limiteConta = valor * 0.1;
+
+        dados.ListaDados.Add(novaConta);
+        mensagem = $"Carteira Criada com Sucesso, acesse sua conta para ver todos os detalhes!\n (Nome: {nome}, CPF: {CPF}, Saldo: {valor})";
+        nome = "";
+        CPF = "";
+        valor = 0;
+    }
+}

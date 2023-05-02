@@ -1,0 +1,34 @@
+﻿@page "/"
+@inject DadosCarteiras dados
+
+
+    <p>Data do Sistema:</p>
+    <br>
+    <p>@dados.DataDoSistema</p>
+
+    <br><br>
+    <p>Atualizar Data</p>
+
+    <input type="datetime" @bind=dados.DataDoSistema></input>
+
+    <br>
+<button @onclick="cobrarTarifa">Cobrar Tarifas (Todos as Contas) </button>
+
+@code {
+
+    // Fazendo a validação dos meses para aplicar a tarifa.
+    private void cobrarTarifa()
+    {
+        double valorTarifa = 19.90;
+
+        if (dados.MesAtual != dados.DataDoSistema.Month)
+        {
+            dados.MesAtual = dados.DataDoSistema.Month;
+
+            foreach (var carteira in dados.ListaDados)
+            {
+                carteira.CobrarTarifa(valorTarifa, dados.DataDoSistema);
+            }
+        }
+    }
+}
